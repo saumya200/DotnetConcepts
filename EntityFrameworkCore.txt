@@ -1,0 +1,95 @@
+-----------How Entity Framework Core Handles Database Interactions (Explained Simply!)----------------------------------------------
+
+Think of Entity Framework Core (EF Core) as a magic translator 🧙‍♂️ that helps a .NET application talk to a database without needing to understand complicated database languages like SQL.
+🛠️ How Does EF Core Work?
+
+Imagine you own a toy store 🏪, and you have a notebook 📒 where you write down all the toy details (name, price, quantity).
+
+1️⃣ Your notebook = The Database 📒 (where data is stored)
+2️⃣ You = EF Core 🧙‍♂️ (the middleman who handles everything)
+3️⃣ Customers = .NET application 👩‍💻 (asking for information)
+
+Whenever a customer (your app) asks for a toy, you (EF Core) read from your notebook (database) and tell them the details. If they want to add a new toy, you write it down in the notebook for them.
+🚀 Example 1: Saving Data (Adding a New Toy)
+
+Suppose you want to add a new toy to your database. Instead of writing SQL queries, EF Core lets you use C# code to do this easily!
+Code Example: Adding a New Toy to the Database
+
+using (var context = new ToyStoreContext()) // Create a connection to the database
+{
+    var toy = new Toy { Name = "Teddy Bear", Price = 500 }; // Create a new toy
+    context.Toys.Add(toy);  // Add it to EF Core
+    context.SaveChanges();   // Save it in the database
+}
+
+👉 What EF Core Does in the Background:
+It translates this C# code into the following SQL Query and runs it in the database:
+
+INSERT INTO Toys (Name, Price) VALUES ('Teddy Bear', 500);
+
+You didn’t have to write SQL! 🎉
+🚀 Example 2: Fetching Data (Finding a Toy)
+
+Now, let’s say a customer wants to know if a Teddy Bear is available. Instead of writing a query, you can do this:
+Code Example: Getting a Toy by Name
+
+using (var context = new ToyStoreContext())
+{
+    var toy = context.Toys.FirstOrDefault(t => t.Name == "Teddy Bear"); 
+    Console.WriteLine($"Toy Found: {toy.Name}, Price: {toy.Price}");
+}
+
+👉 EF Core Translates This to SQL:
+
+SELECT * FROM Toys WHERE Name = 'Teddy Bear' LIMIT 1;
+
+Again, no need to write SQL manually! EF Core does it for you. 🚀
+🚀 Example 3: Updating Data (Changing Toy Price)
+
+A customer complains that the Teddy Bear is too expensive 🧸💰. So, we update its price:
+Code Example: Updating a Toy Price
+
+using (var context = new ToyStoreContext())
+{
+    var toy = context.Toys.FirstOrDefault(t => t.Name == "Teddy Bear");
+    if (toy != null)
+    {
+        toy.Price = 450;  // New price
+        context.SaveChanges();  // Update the database
+    }
+}
+
+👉 EF Core Converts This to SQL:
+
+UPDATE Toys SET Price = 450 WHERE Name = 'Teddy Bear';
+
+Now the Teddy Bear is cheaper! 🎉
+🚀 Example 4: Deleting Data (Removing a Toy)
+
+A customer buys the last Teddy Bear, so we need to remove it from our database:
+Code Example: Deleting a Toy
+
+using (var context = new ToyStoreContext())
+{
+    var toy = context.Toys.FirstOrDefault(t => t.Name == "Teddy Bear");
+    if (toy != null)
+    {
+        context.Toys.Remove(toy);  // Mark it for deletion
+        context.SaveChanges();  // Remove it from the database
+    }
+}
+
+👉 EF Core Translates to SQL:
+
+DELETE FROM Toys WHERE Name = 'Teddy Bear';
+
+Now, the Teddy Bear is gone from the database. 🚀
+🔹 Summary
+
+    Entity Framework Core = Magic Translator 🧙‍♂️ between C# and SQL
+    CRUD Operations (Create, Read, Update, Delete) become easy with C# code instead of complex SQL
+    EF Core automatically converts C# operations into SQL queries so you don’t have to write them manually
+
+👶 Even a 5-year-old can remember this:
+
+Think of EF Core as a robot assistant 🤖 who writes and updates your notebook (database) whenever you ask!
