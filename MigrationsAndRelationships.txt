@@ -1,0 +1,129 @@
+---------------------- MIGRATIONS & RELATIONSHIPS -----------------------------------------------------------------
+
+Imagine you own a LEGO city 🏙️ where each LEGO block represents a piece of data. Migrations are like renovations to your LEGO city, and relationships define how the blocks fit together. Let’s break it down!
+🚀 What Are Migrations?
+
+Think of migrations as blueprints for your database. When you make changes (like adding a new table or a new column), you need to update the database so it knows about the changes.
+🏗️ Example: Opening a New Toy Store
+
+    At first, you have a small toy store with only one shelf (a simple database with one table).
+    You decide to add more shelves (new columns or tables).
+    You need to tell the workers (database) about this update.
+    EF Core migration = blueprint 📜 that tells the workers how to change the store.
+
+💻 Code Example: Creating a Database Table for Toys
+
+public class Toy  
+{  
+    public int Id { get; set; }  
+    public string Name { get; set; }  
+    public decimal Price { get; set; }  
+}
+
+Now, we create a migration to apply this to the database:
+
+dotnet ef migrations add CreateToyTable  
+dotnet ef database update  
+
+👉 EF Core will generate the SQL code to create a table in the database 📊:
+
+CREATE TABLE Toys (
+    Id INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Price DECIMAL
+);
+
+Now, your toy store has shelves ready to store toy data! 🧸🏪
+🛠️ What Happens If You Need Changes?
+
+Imagine you decide to add a new column for "Toy Category" (e.g., "Stuffed Toys" or "Action Figures").
+Updating the Model
+
+public class Toy  
+{  
+    public int Id { get; set; }  
+    public string Name { get; set; }  
+    public decimal Price { get; set; }  
+    public string Category { get; set; }  // New Column
+}
+
+Now, we run another migration:
+
+dotnet ef migrations add AddCategoryColumn  
+dotnet ef database update  
+
+👉 EF Core updates the database:
+
+ALTER TABLE Toys ADD Category VARCHAR(255);
+
+Now, the shelves in your toy store have labels! 🎉
+🔗 What Are Relationships?
+
+Relationships in a database are like friendships between tables.
+🏠 Example: A Toy Store with Customers
+
+You now want to track which customers buy which toys. So, you create two tables:
+
+1️⃣ Toys Table (🧸) – Stores information about toys.
+2️⃣ Customers Table (🧑‍🤝‍🧑) – Stores information about customers.
+3️⃣ Orders Table (🛒) – Connects customers with the toys they buy (relationship).
+
+👉 In database language, this is called a One-to-Many relationship (One Customer can buy Many Toys).
+🛠️ Code Example: One-to-Many Relationship (Customer → Orders)
+
+public class Customer  
+{  
+    public int Id { get; set; }  
+    public string Name { get; set; }  
+    public List<Order> Orders { get; set; }  // One-to-Many Relationship
+}
+
+public class Order  
+{  
+    public int Id { get; set; }  
+    public int CustomerId { get; set; }  
+    public Customer Customer { get; set; }  // Foreign Key
+    public int ToyId { get; set; }  
+    public Toy Toy { get; set; }  
+}
+
+Now, we run:
+
+dotnet ef migrations add CreateCustomerAndOrderTables  
+dotnet ef database update  
+
+👉 EF Core creates relationships in the database:
+
+CREATE TABLE Customers (
+    Id INT PRIMARY KEY,
+    Name VARCHAR(255)
+);
+
+CREATE TABLE Orders (
+    Id INT PRIMARY KEY,
+    CustomerId INT,
+    ToyId INT,
+    FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
+    FOREIGN KEY (ToyId) REFERENCES Toys(Id)
+);
+
+Now, we can track which customer buys which toy! 🧸🛍️
+👫 Other Types of Relationships
+
+    One-to-One (📖 A Book has One Author)
+        Example: A User has one Profile.
+        Each user has only one profile, and each profile belongs to only one user.
+
+    Many-to-Many (🎬 Actors and Movies)
+        Example: A Toy can be in multiple orders, and an order can have multiple toys.
+
+🔹 Summary
+
+    Migrations = Blueprints 📜 that update your database structure when you make changes.
+    Relationships = Friendships 🤝 between different tables (One-to-Many, One-to-One, Many-to-Many).
+    EF Core automatically generates SQL so you don’t have to write it manually.
+
+🎉 How a 5-Year-Old Can Remember This
+
+    Migrations = When you add new LEGO blocks 🏗️ to your LEGO city.
+    Relationships = LEGO pieces 🧩 snapping together so they connect properly.
