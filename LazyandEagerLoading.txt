@@ -1,0 +1,77 @@
+------------------------🚀 Understanding Lazy Loading & Eager Loading in EF Core ---------------------------------------------------------
+
+Imagine you own a toy store 🏪, and you have a big toy catalog 📖 that lists all the toys, their prices, and which customers bought them.
+
+1️⃣ Lazy Loading = You only check toy names first, and later look at customer details if needed.
+2️⃣ Eager Loading = You check everything at once (toy names + customer details) in one go.
+🔎 What is Lazy Loading? (Slow and On-Demand)
+
+Lazy loading is like being lazy 💤 and fetching extra details only when needed.
+🏪 Example: A Customer Wants a Toy List
+
+A customer asks, "What toys do you have?"
+
+    You only show toy names at first. ✅
+    If they ask, "Who bought this toy?", you then check customer details. ✅
+
+💡 In EF Core, Lazy Loading works the same way! It only loads the main data first and fetches related data later if needed.
+📝 Code Example of Lazy Loading
+
+public class Toy  
+{  
+    public int Id { get; set; }  
+    public string Name { get; set; }  
+    public decimal Price { get; set; }  
+    public virtual List<Order> Orders { get; set; }  // Lazy Loaded  
+}
+
+Fetching Data with Lazy Loading
+
+using (var context = new ToyStoreContext())  
+{  
+    var toy = context.Toys.FirstOrDefault(t => t.Name == "Teddy Bear"); // Only toy data is loaded  
+    var orders = toy.Orders; // Orders are loaded **only when accessed**
+}
+
+🔴 EF Core does not load orders at first (Only loads the Toy).
+🔵 When you access toy.Orders, EF Core fetches the related data.
+🚀 What is Eager Loading? (Fast and All-at-Once)
+
+Eager loading means loading everything at once, even if you don’t need all of it.
+🏪 Example: A Customer Wants a Full Toy Report
+
+A customer asks, "Give me a list of toys AND who bought them."
+
+    You fetch toy names AND customer details together immediately. ✅
+
+💡 In EF Core, Eager Loading works the same way! It loads the main data and related data at the same time.
+📝 Code Example of Eager Loading
+
+using (var context = new ToyStoreContext())  
+{  
+    var toysWithOrders = context.Toys.Include(t => t.Orders).ToList();  // Fetch Toys + Orders together  
+}
+
+🔵 Now, EF Core fetches everything in one query!
+
+SELECT * FROM Toys  
+JOIN Orders ON Toys.Id = Orders.ToyId;
+
+✅ Faster for bulk data retrieval.
+✅ Prevents multiple database hits (better performance).
+📊 Lazy Loading vs Eager Loading – Which One to Use?
+Feature	Lazy Loading 💤	Eager Loading 🚀
+When Data is Loaded	Only when accessed	Loaded immediately
+Performance	Faster for small queries	Faster for large data sets
+Number of Queries	Multiple small queries	One big query
+Best For	Small apps where related data is rarely used	Large apps where related data is always needed
+
+💡 Use Lazy Loading when:
+
+    You don’t always need related data.
+    You want to save memory and load extra data only when required.
+
+💡 Use Eager Loading when:
+
+    You always need related data (e.g., Showing all toys with customer purchases).
+    You want to avoid multiple database hits (better for performance).
