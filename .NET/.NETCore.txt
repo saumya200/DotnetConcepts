@@ -1,0 +1,35 @@
+------------------------------------------------------What is .NET Core?---------------------------------------------------------------------
+
+.NET Core is an open-source, cross-platform framework developed by Microsoft for building modern applications. It is a lightweight, 
+high-performance, and modular version of the traditional .NET Framework, designed to run on Windows, Linux, and macOS.
+
+------->Key Features of .NET Core:
+
+   1. Cross-Platform – Runs on Windows, Linux, and macOS, unlike the .NET Framework, which is Windows-only.
+   2. Open-Source – Hosted on GitHub, allowing community contributions and transparency.
+   3. High Performance – Optimized for speed, making it ideal for cloud applications, microservices, and web APIs.
+   4. Modular & Lightweight – Uses NuGet packages, meaning developers can include only the necessary libraries instead of a bulky framework.
+   5. Supports Modern Development – Ideal for cloud, microservices, containers (Docker, Kubernetes), and serverless computing.
+   6. Unified Development – With .NET 5 and later, Microsoft merged .NET Core and .NET Framework into a single platform called .NET (dropping "Core").
+
+----------->Common Use Cases:
+
+   1. Web Applications & APIs – Using ASP.NET Core
+   2. Microservices – Lightweight, scalable services
+   3. Cross-Platform Applications – Running on different OSes
+   4. Cloud & Serverless Computing – Works well with Azure, AWS, and GCP
+
+-------------------------------------Difference Between .NET Framework & .NET Core:-------------------------------------------------
+Feature	                    .NET Framework	                         .NET Core
+
+Platform                    Support	Windows only	           Windows, Linux, macOS
+Open Source               	Partially	                       Fully Open Source
+Performance	                Moderate	                               High
+Modularity	                Monolithic	                       Modular (NuGet-based)
+Use Cases	            Legacy apps, enterprise apps	     Modern web apps, microservices, cloud apps
+
+
+---------->Current Status of .NET Core:
+
+.NET Core evolved into .NET 5+, making it the future of .NET development. If you're starting a new project, .NET 6, .NET 7, or .NET 8 is 
+recommended instead of .NET Core.
