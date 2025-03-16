@@ -1,0 +1,113 @@
+
+------> What is the difference between string and String ?------------------------------------------------------------------------
+
+string is an alias in C# for System.String. So technically, there is no difference. It's like int vs. System.Int32.
+
+As far as guidelines, it's generally recommended to use string any time you're referring to an object.
+
+string place = "world";
+
+Likewise, it's generally recommended to use String if you need to refer specifically to the class.
+
+string greet = String.Format("Hello {0}!", place);
+
+
+======================================================================================================================================
+
+--------------------------Value types and Reference types-----------------------------------------------------------------------------
+
+In C# data types can be of two types: Value Types and Reference Types. For a value type, the value is the information itself. 
+For a reference type, the value is a reference which may be null or may be a way of navigating to an object containing the information.
+
+   1. Value types - Holds some value not memory addresses. Example - Struct. A variable's value is stored wherever it is decleared. 
+   Local variables live on the stack for example, but when declared inside a class as a member it lives on the heap tightly coupled with 
+   the class it is declared in.
+
+    Advantages: A value type does not need extra garbage collection. It gets garbage collected together with the instance it lives in. 
+    Local variables in methods get cleaned up upon method leave.
+
+    Drawbacks:
+       1.  When large set of values are passed to a method the receiving variable actually copies so there are two redundant values in memory.
+        2. As classes are missed out.it losses all the oop benefits
+
+    Reference type - Holds a memory address of a value not value. Example - Class. Stored on heap
+
+    Advantages:
+       1. When you pass a reference variable to a method and it changes it indeed changes the original value whereas in value types a copy of 
+        the given variable is taken and that's value is changed.
+
+       2. When the size of variable is bigger reference type is good
+        As classes come as a reference type variables, they give reusability, thus benefitting Object-oriented programming
+
+    Drawbacks: More work referencing when allocating and dereferences when reading the value.extra overload for garbage collector.
+
+
+    ======================================================================================================================================
+
+    -------------------------------------------------Name some CLR services ? ------------------------------------------------------------
+
+
+    CLR services
+
+    Assembly Resolver
+    Assembly Loader
+    Type Checker
+    COM marshalled
+    Debug Manager
+    Thread Support
+    IL to Native compiler
+    Exception Manager
+    Garbage Collector
+
+
+    ==========================================================================================================================================
+CTS:::::::::::::::::
+
+    The Common Type System (CTS) standardizes the data types of all programming languages using .NET under the umbrella of .NET to a common 
+    data type for easy and smooth communication among these .NET languages.
+
+CTS is designed as a singly rooted object hierarchy with System.Object as the base type from which all other types are derived. CTS supports 
+two different kinds of types:
+
+   1. Value Types: Contain the values that need to be stored directly on the stack or allocated inline in a structure. They can be built-in 
+                 (standard primitive types), user-defined (defined in source code) or enumerations (sets of enumerated values that are 
+                 represented by labels but stored as a numeric type).
+   2. Reference Types: Store a reference to the value‘s memory address and are allocated on the heap. Reference types can be any of the 
+                    pointer types, interface types or self-describing types (arrays and class types such as user-defined classes, boxed 
+                    value types and delegates).
+
+===========================================================================================================================================
+
+CLR :::::::::::::::::::::::::::
+
+The CLR stands for Common Language Runtime and it is an Execution Environment. It works as a layer between Operating Systems and the 
+applications written in .NET languages that conforms to the Common Language Specification (CLS). The main function of Common Language 
+Runtime (CLR) is to convert the Managed Code into native code and then execute the program.
+
+
+===========================================================================================================================================
+
+What is the difference between float , double and decimal in .NET ?
+
+When would someone use one of these?
+Answer
+
+Precision is the main difference.
+
+    Float - 7 digits (32 bit)
+    Double -15-16 digits (64 bit)
+    Decimal -28-29 significant digits (128 bit)
+
+As for what to use when:
+
+    For values which are "naturally exact decimals" it's good to use decimal. This is usually suitable for any concepts invented by humans: 
+    financial values are the most obvious example, but there are others too. Consider the score given to divers or ice skaters, for example.
+
+    For values which are more artefacts of nature which can't really be measured exactly anyway, float/double are more appropriate. 
+    For example, scientific data would usually be represented in this form. Here, the original values won't be "decimally accurate" 
+    to start with, so it's not important for the expected results to maintain the "decimal accuracy". Floating binary point types are 
+    much faster to work with than decimals.
+
+============================================================================================================================================
+
+
