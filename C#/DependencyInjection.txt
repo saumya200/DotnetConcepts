@@ -1,0 +1,122 @@
+🛠 What is Dependency Injection (DI) in C#?
+
+Dependency Injection (DI) is a design pattern used in ASP.NET Core and .NET applications to manage object dependencies efficiently. 
+It helps to achieve loose coupling and improve testability by injecting dependencies instead of creating them inside a class.
+
+🔹 Why Use Dependency Injection?
+
+    Removes Tight Coupling – Instead of creating objects manually, DI provides them automatically.
+    Improves Code Maintainability – Easier to manage and update dependencies.
+    Enhances Testability – Makes unit testing easier by allowing dependency mocking.
+    Follows SOLID Principles – Especially the D (Dependency Inversion Principle).
+
+🔹 Example Without Dependency Injection (Tightly Coupled Code)
+
+public class UserService
+{
+    private EmailService _emailService;
+
+    public UserService()
+    {
+        _emailService = new EmailService();  // ❌ Tight coupling
+    }
+
+    public void RegisterUser(string email)
+    {
+        _emailService.SendEmail(email, "Welcome!");
+    }
+}
+
+public class EmailService
+{
+    public void SendEmail(string to, string message)
+    {
+        Console.WriteLine($"Sending email to {to}: {message}");
+    }
+}
+
+🔴 Problem:
+
+    UserService depends directly on EmailService, making it difficult to replace or test.
+
+🔹 Example With Dependency Injection (Loosely Coupled Code)
+
+public interface IEmailService
+{
+    void SendEmail(string to, string message);
+}
+
+public class EmailService : IEmailService
+{
+    public void SendEmail(string to, string message)
+    {
+        Console.WriteLine($"Sending email to {to}: {message}");
+    }
+}
+
+public class UserService
+{
+    private readonly IEmailService _emailService;
+
+    // Injecting dependency via constructor
+    public UserService(IEmailService emailService)
+    {
+        _emailService = emailService;
+    }
+
+    public void RegisterUser(string email)
+    {
+        _emailService.SendEmail(email, "Welcome!");
+    }
+}
+
+✅ Advantages:
+
+    UserService doesn’t create an instance of EmailService, making it loosely coupled.
+    We can easily swap EmailService with another implementation (e.g., MockEmailService for testing).
+
+🔹 Implementing Dependency Injection in ASP.NET Core
+
+In ASP.NET Core, we use built-in Dependency Injection (DI) Container to register services.
+Step 1: Register Dependencies in Program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Register dependencies
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<UserService>();
+
+var app = builder.Build();
+
+Step 2: Use DI in Controllers
+
+[ApiController]
+[Route("api/users")]
+public class UserController : ControllerBase
+{
+    private readonly UserService _userService;
+
+    public UserController(UserService userService)
+    {
+        _userService = userService;
+    }
+
+    [HttpPost("register")]
+    public IActionResult Register(string email)
+    {
+        _userService.RegisterUser(email);
+        return Ok("User registered successfully!");
+    }
+}
+
+🔹 Types of Dependency Injection in .NET Core
+
+    Constructor Injection (Most common) – Inject dependencies via constructor.
+    Method Injection – Inject dependencies via method parameters.
+    Property Injection – Inject dependencies via properties.
+
+📌 Summary
+
+✅ Dependency Injection (DI) improves modularity, testability, and maintainability.
+✅ It allows swapping implementations without modifying the main logic.
+✅ .NET Core has built-in DI, making it easy to use.

@@ -1,0 +1,88 @@
+🔐 What is a JWT Token?
+
+JWT (JSON Web Token) is a secure way to send information between two parties (like a client and a server). It is commonly used for user authentication in web applications.
+🛠 Structure of a JWT Token
+
+A JWT consists of three parts, separated by dots (.):
+
+Header.Payload.Signature
+
+Example JWT Token (simplified):
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywicm9sZSI6IlVzZXIifQ.xnYVoiKkhGQvlXLgTpYK6n8N7xg3zVlyqg7M3F8S5oE
+
+🛠 Breakdown of the JWT Token
+
+1️⃣ Header → Contains metadata like token type and encryption algorithm.
+
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+2️⃣ Payload → Contains user information (claims) like user ID, email, and role.
+
+{
+  "userId": 123,
+  "role": "User"
+}
+
+3️⃣ Signature → Ensures the token is valid and hasn't been tampered with.
+🔑 How JWT Works (Step-by-Step)
+
+1️⃣ User logs in → Sends username & password to the server.
+2️⃣ Server verifies credentials → If valid, it creates a JWT token.
+3️⃣ Client stores the token (e.g., in localStorage or cookies).
+4️⃣ For every request → The client sends the token in the request header.
+5️⃣ Server verifies the token → Grants access if it's valid.
+📝 C# Example: Generate JWT in .NET
+
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
+public class JWTExample
+{
+    public static string GenerateToken(string username)
+    {
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Your_Secret_Key"));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Role, "User")
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: "yourwebsite.com",
+            audience: "yourwebsite.com",
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public static void Main()
+    {
+        string token = GenerateToken("JohnDoe");
+        Console.WriteLine("Generated JWT Token: " + token);
+    }
+}
+
+🚀 Why Use JWT?
+
+✅ Secure (uses encryption & signatures)
+✅ Stateless (no need to store sessions on the server)
+✅ Fast Authentication (used in APIs and microservices)
+✅ Cross-platform (works with React, .NET, Java, Node.js, etc.)
+🛠 Where is JWT Used?
+
+🔹 User Authentication (Login systems)
+🔹 API Security (REST APIs)
+🔹 Single Sign-On (SSO)
+🔹 Authorization (Roles & Permissions)

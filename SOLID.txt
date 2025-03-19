@@ -1,0 +1,212 @@
+The SOLID principles are five design principles that help developers create scalable, maintainable, and flexible software. They improve code quality and make it easier to understand and modify.
+S - Single Responsibility Principle (SRP)
+
+📌 Definition: A class should have only one reason to change, meaning it should only have one job.
+
+✅ Example:
+
+// ❌ Bad: This class does too many things (manages user & logs)
+class UserManager
+{
+    public void AddUser(string name) { /* Add user logic */ }
+    public void LogUserActivity(string activity) { /* Logging logic */ }
+}
+
+// ✅ Good: Separate responsibilities into different classes
+class User
+{
+    public void AddUser(string name) { /* Add user logic */ }
+}
+
+class Logger
+{
+    public void LogUserActivity(string activity) { /* Logging logic */ }
+}
+
+👉 Why? If logging needs changes, we don’t have to modify UserManager.
+O - Open/Closed Principle (OCP)
+
+📌 Definition: Software entities (classes, methods) should be open for extension but closed for modification.
+
+✅ Example:
+
+// ❌ Bad: Changing the class every time we add a new shape
+class Shape
+{
+    public string Type;
+}
+
+class AreaCalculator
+{
+    public double Calculate(Shape shape)
+    {
+        if (shape.Type == "Circle") { return /* Circle area logic */; }
+        else if (shape.Type == "Square") { return /* Square area logic */; }
+        return 0;
+    }
+}
+
+// ✅ Good: Use inheritance and polymorphism
+abstract class Shape
+{
+    public abstract double CalculateArea();
+}
+
+class Circle : Shape
+{
+    public override double CalculateArea() { return /* Circle area logic */; }
+}
+
+class Square : Shape
+{
+    public override double CalculateArea() { return /* Square area logic */; }
+}
+
+class AreaCalculator
+{
+    public double Calculate(Shape shape) => shape.CalculateArea();
+}
+
+👉 Why? If we add a new shape (e.g., Triangle), we don’t need to modify AreaCalculator.
+L - Liskov Substitution Principle (LSP)
+
+📌 Definition: Subclasses should be replaceable for their base classes without breaking the program.
+
+✅ Example:
+
+// ❌ Bad: Square breaks the behavior of Rectangle
+class Rectangle
+{
+    public virtual int Width { get; set; }
+    public virtual int Height { get; set; }
+
+    public int GetArea() => Width * Height;
+}
+
+class Square : Rectangle
+{
+    public override int Width { set { base.Width = base.Height = value; } }
+    public override int Height { set { base.Width = base.Height = value; } }
+}
+
+👉 Square forces width and height to be the same, which changes the behavior of Rectangle.
+
+✅ Good Approach:
+
+abstract class Shape
+{
+    public abstract int GetArea();
+}
+
+class Rectangle : Shape
+{
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public override int GetArea() => Width * Height;
+}
+
+class Square : Shape
+{
+    public int Side { get; set; }
+    public override int GetArea() => Side * Side;
+}
+
+👉 Why? Now, Square and Rectangle both correctly follow their own logic.
+I - Interface Segregation Principle (ISP)
+
+📌 Definition: A class should not be forced to implement unnecessary methods that it does not use.
+
+✅ Example:
+
+// ❌ Bad: The interface has too many methods
+interface IWorker
+{
+    void Work();
+    void Eat();
+}
+
+class Robot : IWorker  // Robots don’t eat!
+{
+    public void Work() { /* Working logic */ }
+    public void Eat() { throw new NotImplementedException(); } // Unnecessary
+}
+
+// ✅ Good: Split interfaces into smaller ones
+interface IWork
+{
+    void Work();
+}
+
+interface IEat
+{
+    void Eat();
+}
+
+class Human : IWork, IEat
+{
+    public void Work() { /* Working logic */ }
+    public void Eat() { /* Eating logic */ }
+}
+
+class Robot : IWork
+{
+    public void Work() { /* Working logic */ }
+}
+
+👉 Why? Now, Robot doesn’t have to implement Eat(), which makes sense.
+D - Dependency Inversion Principle (DIP)
+
+📌 Definition: High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+✅ Example:
+
+// ❌ Bad: High-level class depends on a low-level class directly
+class MySQLDatabase
+{
+    public void SaveData() { /* Save to MySQL */ }
+}
+
+class DataService
+{
+    private MySQLDatabase _db = new MySQLDatabase();
+    public void Save() => _db.SaveData();
+}
+
+// ✅ Good: Use an interface for abstraction
+interface IDatabase
+{
+    void SaveData();
+}
+
+class MySQLDatabase : IDatabase
+{
+    public void SaveData() { /* Save to MySQL */ }
+}
+
+class MongoDBDatabase : IDatabase
+{
+    public void SaveData() { /* Save to MongoDB */ }
+}
+
+class DataService
+{
+    private IDatabase _db;
+    public DataService(IDatabase db) { _db = db; }
+    public void Save() => _db.SaveData();
+}
+
+👉 Why? Now, DataService can work with any database (MySQL, MongoDB, etc.), making it flexible.
+🚀 Summary Table
+Principle	                      Definition	                                                   Example Scenario
+
+S - Single Responsibility	 A class should do only one thing	                     Separate UserManager and Logger instead of combining them
+O - Open/Closed	            Extend functionality without modifying existing code	Use abstract Shape instead of if-else for shapes
+L - Liskov Substitution	    Subclasses should be replaceable for their base class	Rectangle and Square should behave independently
+I - Interface Segregation	Don’t force classes to implement unused methods	               Separate IWorker into IWork and IEat
+D - Dependency Inversion	Depend on abstractions, not concrete classes	               Use IDatabase instead of MySQLDatabase
+
+💡 Why Use SOLID?
+
+✅ Makes code modular and reusable
+✅ Improves maintainability and scalability
+✅ Reduces dependencies and tight coupling

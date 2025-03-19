@@ -1,0 +1,83 @@
+🔐 What is OAuth?
+
+OAuth (Open Authorization) is a secure framework that allows applications to access user data from another service without needing the user’s password. It is widely used for secure authentication and third-party logins (e.g., "Login with Google/Facebook").
+🛠 How OAuth Works (Step-by-Step)
+
+Imagine you want to log in to a website using your Google account (OAuth provider). Here's what happens:
+
+1️⃣ You click "Login with Google".
+2️⃣ The website redirects you to Google’s login page.
+3️⃣ You enter your Google credentials (Google verifies them).
+4️⃣ Google asks for your permission to share your info.
+5️⃣ If you approve, Google sends a token back to the website.
+6️⃣ The website uses this token to access your Google profile (e.g., name, email).
+7️⃣ You are logged in! 🎉
+🔑 Key Concepts in OAuth
+
+1️⃣ Client → The application requesting access (e.g., a website).
+2️⃣ Resource Owner → You (the user who owns the data).
+3️⃣ Authorization Server → Verifies identity & issues tokens (e.g., Google, Facebook).
+4️⃣ Access Token → A temporary key that lets the client access user data securely.
+5️⃣ Scopes → Define what data the client can access (e.g., email, contacts, photos).
+🛠 C# Example: Implement OAuth in ASP.NET Core
+
+Want to add Google login to your .NET app? Use OAuth 2.0 with ASP.NET Core!
+1️⃣ Install required package
+
+dotnet add package Microsoft.AspNetCore.Authentication.Google
+
+2️⃣ Configure Google OAuth in Program.cs
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddGoogle(options =>
+{
+    options.ClientId = "YOUR_GOOGLE_CLIENT_ID";
+    options.ClientSecret = "YOUR_GOOGLE_CLIENT_SECRET";
+});
+
+var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/", (HttpContext context) =>
+{
+    return Results.Redirect("/login");
+});
+
+app.MapGet("/login", () => Results.Challenge(new AuthenticationProperties
+{
+    RedirectUri = "/profile"
+}, GoogleDefaults.AuthenticationScheme));
+
+app.MapGet("/profile", (HttpContext context) =>
+{
+    var user = context.User.Identity;
+    return Results.Text($"Hello, {user?.Name}");
+});
+
+app.Run();
+
+🚀 Where is OAuth Used?
+
+🔹 Social Logins (Google, Facebook, GitHub, Twitter)
+🔹 Third-party API access (Google Drive, Spotify, LinkedIn)
+🔹 Mobile & Web Authentication
+🔹 Single Sign-On (SSO)
+🆚 OAuth vs JWT
+
+Feature	                                            OAuth	                                                      JWT
+
+Purpose	                                User authentication & third-party access      	           API authentication & secure data exchange
+Requires External Provider	               ✅ Yes (Google, Facebook, etc.)	                          ❌ No (self-contained)
+Use Case                                 Login with Google/Facebook	                                    Securing API endpoints
+Token Type	                                    Access Token	                                               JWT Token

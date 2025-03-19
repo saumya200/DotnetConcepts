@@ -1,0 +1,44 @@
+📌 Difference Between Value Types and Reference Types in C#
+
+In C#, data types are categorized into Value Types and Reference Types based on how they store and manage memory.
+
+Feature	                                     Value Type	                                     Reference Type
+
+Storage	                                Stored in Stack memory.	                           Stored in Heap memory.
+Copy Behavior	                Creates a copy when assigned to a new variable.      	Copies the reference (pointer), not the object.
+Data Modification	              Changes in one variable do not affect others.	        Changes affect all references to the same object.
+Performance	                          Faster (Stack memory access).	                       Slower (Heap memory access).
+Default Value	                   Has default values (e.g., 0 for int).	                   Defaults to null.
+Examples	                    int, float, double, char, bool, struct, enum	      class, string, array, interface, delegate
+
+🔹 Example: Value Type
+
+int a = 10;
+int b = a;  // A copy of 'a' is created
+b = 20;
+
+Console.WriteLine(a);  // Output: 10
+Console.WriteLine(b);  // Output: 20
+
+✅ b is a separate copy, so modifying b does not affect a.
+🔹 Example: Reference Type
+
+class Person
+{
+    public string Name;
+}
+
+Person person1 = new Person();
+person1.Name = "Alice";
+
+Person person2 = person1; // person2 references the same object
+person2.Name = "Bob";
+
+Console.WriteLine(person1.Name); // Output: Bob
+Console.WriteLine(person2.Name); // Output: Bob
+
+✅ Both person1 and person2 point to the same object in Heap, so changing person2 also affects person1.
+📌 Summary
+
+    Use Value Types when data is simple and does not need shared references (e.g., int, float).
+    Use Reference Types when working with large, complex objects that need shared access (class, array).
